@@ -10,10 +10,10 @@ before_install:
 - cd tortuga_kits/urb_uge_1_0_0/puppet_modules/tortuga_kit_urb_uge/files && curl -sLO https://github.com/UnivaCorporation/urb-uge/releases/download/${URB_TAG}/urb-${URB_VER}.tar.gz && cd -
 install:
 - ls -lFa
-- chmod -R a-w .
+#- chmod -R a-w .
 - docker run --rm -it -v `pwd`:/kit-src $BUILD_KIT_IMAGE
 - ls -lFa
-- sudo chown -R travis:travis /home/travis/
+#- sudo chown -R travis:travis /home/travis/
 - ls -lFa
 script:
 - echo "Done"
