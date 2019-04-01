@@ -133,10 +133,18 @@ class tortuga_kit_urb_uge::master (
     require => Exec["urb_master_install"]
   }
 
-  exec { "modify_urb_job_class":
-    command => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -sjc URBDefault > /tmp/urb_jc.tmp; sed -ie \"s/^l_hard[ ]*.*$/l_hard urb=TRUE/\"  /tmp/urb_jc.tmp; qconf -Mjc /tmp/urb_jc.tmp'",
+#  exec { "modify_urb_job_class":
+#    command => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -sjc URBDefault > /tmp/urb_jc.tmp; sed -ie \"s/^l_hard[ ]*.*$/l_hard urb=TRUE/\"  /tmp/urb_jc.tmp; qconf -Mjc /tmp/urb_jc.tmp'",
+#    user    => $uge_manager_user,
+#    unless => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -sjc URBDefault | grep urb=TRUE'",
+#    require => Exec["add_uge_urb_complex"]
+#  }
+
+  exec { "modify_urb_config":
+    cwd     => $urb_root,
+    command => "/bin/bash -c 'sed -i \"/DefaultFrameworkConfig/,/job_submit_options/ {s/\(job_submit_options[ \t]*.*\)$/\1 -l urb=TRUE/}\" etc/urb.conf && /bin/systemctl restart urb'",
     user    => $uge_manager_user,
-    unless => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -sjc URBDefault | grep urb=TRUE'",
+    unless => "/bin/awk '/DefaultFrameworkConfig/,/job_submit_options/ {print}' etc/urb.conf | grep urb=TRUE",
     require => Exec["add_uge_urb_complex"]
   }
 
