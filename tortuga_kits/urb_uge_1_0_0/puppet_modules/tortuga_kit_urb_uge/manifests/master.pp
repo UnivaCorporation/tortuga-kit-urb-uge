@@ -142,10 +142,8 @@ class tortuga_kit_urb_uge::master (
 
   exec { "modify_urb_config":
     cwd     => $urb_root,
-    command => "/bin/bash -c 'sed -i \"/DefaultFrameworkConfig/,/job_submit_options/ {s/\(job_submit_options[ \t]*.*\)$/\1 -l urb=TRUE/}\" etc/urb.conf && /bin/systemctl restart urb'",
-    user    => $uge_manager_user,
-    unless => "/bin/awk '/DefaultFrameworkConfig/,/job_submit_options/ {print}' etc/urb.conf | grep urb=TRUE",
+    command => "/usr/bin/sudo /usr/bin/su - ${uge_manager_user} -c 'sed -i \"/DefaultFrameworkConfig/,/job_submit_options/ {s/\(job_submit_options[ \t]*.*\)$/\1 -l urb=TRUE/}\" ${urb_root}/etc/urb.conf' && /bin/systemctl restart urb",
+    unless => "/bin/awk '/DefaultFrameworkConfig/,/job_submit_options/ {print}' etc/urb.conf | /usr/bin/grep urb=TRUE",
     require => Exec["add_uge_urb_complex"]
   }
-
 }
