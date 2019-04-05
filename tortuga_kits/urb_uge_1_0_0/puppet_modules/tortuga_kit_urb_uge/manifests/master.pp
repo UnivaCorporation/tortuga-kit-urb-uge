@@ -27,6 +27,7 @@ class tortuga_kit_urb_uge::master (
   Boolean $no_mongo = $tortuga_kit_urb_uge::config::no_mongo,
 #  Booleal $retrieve_from_web = $tortuga_kit_urb_uge::config::retrieve_from_web,
 ) inherits tortuga_kit_urb_uge::config {
+  require tortuga_kit_uge::qmaster::post_install
   $uge_manager_user = $uge_user
 #  if $retrieve_from_web {
 #    # Set location of distribution tarballs for installation
