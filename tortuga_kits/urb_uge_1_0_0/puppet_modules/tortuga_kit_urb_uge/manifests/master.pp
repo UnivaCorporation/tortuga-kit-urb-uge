@@ -27,7 +27,7 @@ class tortuga_kit_urb_uge::master (
   Boolean $no_mongo = $tortuga_kit_urb_uge::config::no_mongo,
 #  Booleal $retrieve_from_web = $tortuga_kit_urb_uge::config::retrieve_from_web,
 ) inherits tortuga_kit_urb_uge::config {
-  require tortuga_kit_uge::qmaster::post_install
+#  require tortuga_kit_uge::qmaster::post_install
   $uge_manager_user = $uge_user
 #  if $retrieve_from_web {
 #    # Set location of distribution tarballs for installation
@@ -84,6 +84,10 @@ class tortuga_kit_urb_uge::master (
     user    => $uge_manager_user
   }
 
+  exec { "submit_host":
+    command => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -as ${::fqdn}",
+    unless => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -ss | grep -q ${::fqdn}",
+  }
 #  exec { "is_sudoer":
 #    command => "/usr/bin/sudo -k && /usr/bin/sudo -n echo",
 #    user    => $uge_manager_user
@@ -147,4 +151,7 @@ class tortuga_kit_urb_uge::master (
     unless => "/bin/awk '/DefaultFrameworkConfig/,/job_submit_options/ {print}' etc/urb.conf | /usr/bin/grep urb=TRUE",
     require => Exec["add_uge_urb_complex"]
   }
+
+  # ensure tortuga uge installation is run before this class
+  Tortuga_kit_uge::Installed<| |> -> Class['tortuga_kit_urb_uge::master']
 }
