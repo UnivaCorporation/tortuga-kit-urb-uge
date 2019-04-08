@@ -152,6 +152,6 @@ class tortuga_kit_urb_uge::master (
     require => Exec["add_uge_urb_complex"]
   }
 
-  # ensure tortuga uge installation is run before this class
+  # ensure tortuga uge qmaster installation is run before this class
   Tortuga_kit_uge::Installed<| |> -> Class['tortuga_kit_urb_uge::master']
 }
