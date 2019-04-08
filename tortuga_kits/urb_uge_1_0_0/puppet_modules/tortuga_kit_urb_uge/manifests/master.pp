@@ -25,6 +25,10 @@ class tortuga_kit_urb_uge::master (
   String $python = $tortuga_kit_urb_uge::config::python,
   String $redis_port = $tortuga_kit_urb_uge::config::redis_port,
   Boolean $no_mongo = $tortuga_kit_urb_uge::config::no_mongo,
+  Boolean $send_task_lost = $tortuga_kit_urb_uge::config::send_task_lost,
+  String $job_submit_clear = $tortuga_kit_urb_uge::config::job_submit_clear.
+  String $resource_mapping = $tortuga_kit_urb_uge::config::resource_mapping,
+
 #  Booleal $retrieve_from_web = $tortuga_kit_urb_uge::config::retrieve_from_web,
 ) inherits tortuga_kit_urb_uge::config {
 #  require tortuga_kit_uge::qmaster::post_install
@@ -145,9 +149,19 @@ class tortuga_kit_urb_uge::master (
 #    require => Exec["add_uge_urb_complex"]
 #  }
 
+  if $send_task_lost {
+    $def_send_task_lost = 'True'
+  } else {
+    $def_send_task_lost = 'False'
+  }
+  if $job_submit_clear {
+    $def_job_submit_clear = 'True'
+  } else {
+    $def_job_submit_clear = 'False'
+  }
   exec { "modify_urb_config":
     cwd     => $urb_root,
-    command => "/usr/bin/sudo /usr/bin/su - ${uge_manager_user} -c 'sed -i \"/DefaultFrameworkConfig/,/job_submit_options/ {s/\(job_submit_options[ \t]*.*\)$/\1 -l urb=TRUE/}\" ${urb_root}/etc/urb.conf' && /bin/systemctl restart urb",
+    command => "/usr/bin/sudo /usr/bin/su - ${uge_manager_user} -c 'sed -i \"/DefaultFrameworkConfig/,/job_submit_options/ {s/\(job_submit_options[ \t]*.*\)$/\1 -l urb=TRUE/; s/send_task_lost[ \t]*.*$/send_task_lost = ${def_send_task_lost}/; s/job_submit_clear[ \t]*.*$/job_submit_clear = ${def_job_submit_clear}/; s/job_submit_clear[ \t]*.*$/job_submit_clear = ${def_job_submit_clear}/; s/resource_mapping[ \t]*.*$/resource_mapping = ${resource_mapping}/}\" ${urb_root}/etc/urb.conf' && /bin/systemctl restart urb",
     unless => "/bin/awk '/DefaultFrameworkConfig/,/job_submit_options/ {print}' etc/urb.conf | /usr/bin/grep urb=TRUE",
     require => Exec["add_uge_urb_complex"]
   }

@@ -24,5 +24,9 @@ class tortuga_kit_urb_uge::params {
   $python = "/usr/bin/python"
   $redis_port = "6380"
   $no_mongo = true
+  # DefaultFrameworkConfig framework configuration options (in etc/urb.conf)
+  $send_task_lost = true # required for Spark
+  $job_submit_clear = false # required for UGE context variables to be passed
+  $resource_mapping = 'hard' # recommended for Spark, can be 'hard', 'soft', or '' (empty string) 
 #  $retrieve_from_web = true
 }
