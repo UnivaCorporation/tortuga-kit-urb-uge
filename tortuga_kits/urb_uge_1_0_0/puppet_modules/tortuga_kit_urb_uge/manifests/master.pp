@@ -26,7 +26,7 @@ class tortuga_kit_urb_uge::master (
   String $redis_port = $tortuga_kit_urb_uge::config::redis_port,
   Boolean $no_mongo = $tortuga_kit_urb_uge::config::no_mongo,
   Boolean $send_task_lost = $tortuga_kit_urb_uge::config::send_task_lost,
-  String $job_submit_clear = $tortuga_kit_urb_uge::config::job_submit_clear,
+  Boolean $job_submit_clear = $tortuga_kit_urb_uge::config::job_submit_clear,
   String $resource_mapping = $tortuga_kit_urb_uge::config::resource_mapping,
 
 #  Booleal $retrieve_from_web = $tortuga_kit_urb_uge::config::retrieve_from_web,
