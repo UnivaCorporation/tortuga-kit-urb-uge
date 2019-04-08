@@ -85,8 +85,8 @@ class tortuga_kit_urb_uge::master (
   }
 
   exec { "submit_host":
-    command => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -as ${::fqdn}",
-    unless => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -ss | grep -q ${::fqdn}",
+    command => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -as ${::fqdn}'",
+    unless => "/bin/bash -c '. ${sge_root}/${sge_cell}/common/settings.sh && qconf -ss | grep -q ${::fqdn}'",
   }
 #  exec { "is_sudoer":
 #    command => "/usr/bin/sudo -k && /usr/bin/sudo -n echo",
