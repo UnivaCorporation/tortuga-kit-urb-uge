@@ -161,7 +161,7 @@ class tortuga_kit_urb_uge::master (
   }
   exec { "modify_urb_config":
     cwd     => $urb_root,
-    command => "/usr/bin/sudo /usr/bin/su - ${uge_manager_user} -c 'sed -i \"/DefaultFrameworkConfig/,/job_submit_options/ {s/\(job_submit_options[ \t]*.*\)$/\1 -l urb=TRUE/; s/send_task_lost[ \t]*.*$/send_task_lost = ${def_send_task_lost}/; s/job_submit_clear[ \t]*.*$/job_submit_clear = ${def_job_submit_clear}/; s/job_submit_clear[ \t]*.*$/job_submit_clear = ${def_job_submit_clear}/; s/resource_mapping[ \t]*.*$/resource_mapping = ${resource_mapping}/}\" ${urb_root}/etc/urb.conf' && /bin/systemctl restart urb",
+    command => "/usr/bin/sudo /usr/bin/su - ${uge_manager_user} -c 'sed -i \"/DefaultFrameworkConfig/,/job_submit_options/ {s/\(job_submit_options[ \t]*.*\)$/\1 -l urb=TRUE/; s/send_task_lost[ \t]*.*$/send_task_lost = ${def_send_task_lost}/; s/job_submit_clear[ \t]*.*$/job_submit_clear = ${def_job_submit_clear}/; s/resource_mapping[ \t]*.*$/resource_mapping = ${resource_mapping}/}\" ${urb_root}/etc/urb.conf' && /bin/systemctl restart urb",
     unless => "/bin/awk '/DefaultFrameworkConfig/,/job_submit_options/ {print}' etc/urb.conf | /usr/bin/grep urb=TRUE",
     require => Exec["add_uge_urb_complex"]
   }
