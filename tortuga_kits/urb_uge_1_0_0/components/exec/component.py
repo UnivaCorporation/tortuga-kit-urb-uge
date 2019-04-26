@@ -185,6 +185,11 @@ class ComponentInstaller(UrbComponentInstaller):
 
         clusters = self.get_cluster_by_swprofilename(software_profile_name)
         cluster = self._normalize_cluster_config_dict(clusters[0])
+        if not software_profile_name in cluster['execd_swprofiles']:
+            self._logger.debug('urb exec: action_add_host: {} not an execd software profile'.
+                               format(software_profile_name))
+            return
+
         cell_dir = os.path.join(cluster['settings']['sge_root'], cluster['settings']['cell_name'])
 
         env = {**os.environ,
