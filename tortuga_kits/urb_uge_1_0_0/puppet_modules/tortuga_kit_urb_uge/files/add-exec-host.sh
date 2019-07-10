@@ -66,7 +66,8 @@ if [ -z "$cell_dir" ] || [ -z "$1" ]; then
   usage
 fi
 
-hostName=$1
+node=$1
+TeeOut "URB kit: On adding host: $node"
 
 binDir=`dirname $0`
 cd $binDir
@@ -84,19 +85,22 @@ fi
 
 . $cell_dir/common/settings.sh
 
-TeeOut "URB kit: On adding host: $hostName"
+if [ ! -f $SGE_ROOT/setup/uge-config.sh ]; then
+  echo "$SGE_ROOT/setup/uge-config.sh not found"
+  exit 1
+fi
+. $SGE_ROOT/setup/uge-config.sh
 
-if ! qconf -sel | egrep -q "^($hostName\..*)|($hostName)$"; then
-  TeeOut "URB kit: Making exec host $hostName"
-  REPLACE_HOST="$hostName" EDITOR="$binDir/install-exec-host.sh" qconf -ae
+
+if ! qconf -sel | egrep -q "^($node\..*)|($node)$"; then
+  TeeOut "URB kit: Making exec host $node"
+  REPLACE_HOST="$node" EDITOR="$binDir/install-exec-host.sh" qconf -ae
 fi
 
-if ! qconf -se $hostName | egrep -q 'urb=TRUE'; then
-  TeeOut "URB kit: Adding urb complex: $hostName"
-  EDITOR="$binDir/add-complex.sh" qconf -me $hostName
-  if [ $? -ne 0 ]; then
-    TeeOut "URB kit: Error adding urb complex: $hostName"
-  fi
+TeeOut "URB kit: Adding urb complex on $node"
+if ! add_complex_value $node urb 1 ; then
+  TeeOut "URB kit: Error adding urb complex on $node"
+  exit 1
 fi
 
 exit 0

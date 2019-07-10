@@ -23,4 +23,4 @@ if [ "x$REPLACE_HOST" = "x" ]; then
     exit 1
 fi
 
-sed -i -e "s/^\(hostname[ ]*\)\(template\)$/\1$REPLACE_HOST/" -e "s/^\(complex_values[ ]*\).*/\1 tortuga=TRUE/" $1
+sed -i -e "s/^\(hostname[ ]*\)\(template\)$/\1$REPLACE_HOST/" $1
